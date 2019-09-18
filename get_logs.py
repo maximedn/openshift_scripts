@@ -37,6 +37,8 @@ def main():
     arguments = parse_arguments()
     environment = ENVS[arguments.environment]
 
+    print(f'working directory: {os.getcwd()}')
+
     path = f"{EXEC_PATH}/{arguments.environment}/{datetime.datetime.now()}-{arguments.environment}"
     path = f'{path}-{arguments.pod}' if arguments.pod else path
     path = path.replace(':', '-').replace(' ', '_')
@@ -84,11 +86,11 @@ def get_logs_for_pod(path: str, pod: str, environment: str, rsync: bool):
     if rsync:
         pod_path = f'{path}/{pod.decode()}-{environment}'
         os.mkdir(pod_path)
-        print(f'command={OC_PATH} rsync {pod.decode()}:/opt/bosa/ "{pod_path}"')
-        out = subprocess.Popen([OC_PATH, 'rsync', f'{pod.decode()}:/opt/bosa/logs/', f'"{pod_path}"'],
-                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(f'command={OC_PATH} rsync {pod.decode()}:/opt/bosa/logs "{pod_path}"')
+        out = subprocess.Popen([OC_PATH, 'rsync', f'{pod.decode()}:/opt/bosa/logs', pod_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         stdout, stderr = out.communicate()
-        print(stderr)
+        print(f'stderr={stderr}')
+        print(f'stdout={stdout}')
 
     else:
         out = subprocess.Popen([OC_PATH, 'logs', pod],
