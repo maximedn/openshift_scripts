@@ -12,12 +12,6 @@ OC_PATH = os.getenv('OC_PATH')
 OC_USERNAME = os.getenv('OC_USERNAME')
 OC_PASSWORD = os.getenv('OC_PASSWORD')
 
-ENVS = {
-    'ta': 'bosa-dt-test-hcp-fedapi',
-    'int': 'bosa-dt-acc-hcp-fedapi',
-    'prod': 'bosa-dt-prod-hcp-fedapi'
-}
-
 
 def parse_arguments():
     """
@@ -35,7 +29,6 @@ def parse_arguments():
 
 def main():
     arguments = parse_arguments()
-    environment = ENVS[arguments.environment]
 
     print(f'working directory: {os.getcwd()}')
 
@@ -57,7 +50,7 @@ def main():
     out.communicate()
 
     # project selection
-    out = subprocess.Popen([OC_PATH, 'project', environment],
+    out = subprocess.Popen([OC_PATH, 'project', arguments.environment],
                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     out.communicate()
 
